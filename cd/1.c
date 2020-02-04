@@ -1,40 +1,94 @@
-//Q.No.1 WAP to read the number of comment lines from a file
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+#include<string.h>
+#include<ctype.h>
 
-# include <stdio.h> 
-# include <string.h> 
+int n,m=0,p,i=0,j=0;
+char a[10][10],f[10],c;
 
-int main( ) 
-{ 
-			FILE *fp1, *fp2 ; 
-			int single=0,multi=0;
-		 char ch[100];
-	
-	  fp1 = fopen("sample.c", "r+") ; 
-	  fp2 = fopen("1.txt", "w+");
-	  if ( fp1 == NULL  && fp2 == NULL ) 
-	  { 
-		     printf( " failed to open." ) ; 
-	  } 
-	  else
-	  { 
-			    fscanf(fp1,"%s",ch);
+void follow(char c);
 
-		     while(!feof(fp1))
-		     {
-		         if(strstr(ch,"//"))
-			            single++;
-           if(strstr(ch,"/*"))
-			            multi++;
-	          fscanf(fp1,"%s",ch);	
-											fputs(ch, fp2);
-	     	}
+void first(char c)
+{
+				int k;
+				if(!isupper(c))
+								f[m++]=c;
+				for(k=0;k<n;k++)
+				{
+								if(a[k][0]==c)
+								{
+												if(a[k][2]=='$')
+																follow(a[k][0]);
+												else if(islower(a[k][2]))
+																f[m++]=a[k][2];
+												else
+															 first(a[k][2]);
+								}
+				}
+}
 
-		     printf("single %d and Multi %d",single,multi);
+void follow(char c)
+{
+				if(a[0][0]==c)
+        f[m++]='$';
+    for(i=0;i<n;i++)
+    {
+        for(j=2;j<strlen(a[i]);j++)
+        {
+            if(a[i][j]==c)
+            {
+                 if(a[i][j+1]!='\0')
+                     first(a[i][j+1]);
+                 if(a[i][j+1]=='\0' && c!=a[i][0])
+                     follow(a[i][0]);
+            }
+        }
+    }
+}
 
-		     fclose(fp1);
-		     fclose(fp2); 
-		
-	  } 
-	  return 0;		 
-} 
-
+int main()
+{
+				int z;
+				char ch;
+				printf("Enter the no of productions:\n");
+				scanf("%d",&n);
+				printf("Enter the productions:\n");
+				for(i=0;i<n;i++)
+								scanf("%s%c",a[i],&ch);
+				do{
+								m=0;
+								printf("Enter the elements whose fisrt & follow is to be found:");
+								scanf("%c",&c);
+								first(c);
+								printf("First(%c)={",c);
+								for(i=0;i<m;i++)
+								{
+													if(i==m-1)
+																	printf("%c",f[i]);
+													else
+																	printf("%c,",f[i]);
+								}
+								printf("}\n");
+								strcpy(f," ");
+								m=0;
+								follow(c);
+								printf("Follow(%c)={",c);
+								for(i=0;i<m;i++)
+								{
+													if(i==m-1)
+													{
+																	if(f[i]=='#')
+																					printf("$");
+																	else
+																					printf("%c",f[i]);
+													}
+													else
+																	printf("%c,",f[i]);
+								}
+								printf("}\n");
+								printf("Continue(0/1)?");
+								scanf("%d%c",&z,&ch);
+							}while(z==1);
+				return(0);
+}
