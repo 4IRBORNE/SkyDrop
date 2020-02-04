@@ -84,7 +84,10 @@ int main()
 																					printf("%c",f[i]);
 													}
 													else
-																	printf("%c,",f[i]);
+													{
+																	if(f[i]!="#")
+																					printf("%c,",f[i]);
+													}
 								}
 								printf("}\n");
 								printf("Continue(0/1)?");
