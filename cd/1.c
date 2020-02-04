@@ -85,7 +85,7 @@ int main()
 													}
 													else
 													{
-																	if(f[i]!="#")
+																	if(f[i]!='#')
 																					printf("%c,",f[i]);
 													}
 								}
